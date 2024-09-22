@@ -6,7 +6,7 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 17:38:41 by skuznets          #+#    #+#             */
-/*   Updated: 2024/06/16 17:44:24 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/22 10:58:07 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,48 +40,62 @@ void	ss(t_stack *a, t_stack *b)
 	sb(b);
 }
 
-void	pa(t_stack *a, t_stack *b)
+void pa(t_stack *a, t_stack *b)
 {
-	int	i;
+    int i;
 
-	if (b->size == 0)
-		return ;
-	i = a->size;
-	while (i > 0)
-	{
-		a->array[i] = a->array[i - 1];
-		i--;
-	}
-	a->array[0] = b->array[0];
-	a->size++;
-	i = 0;
-	while (i < b->size)
-	{
-		b->array[i] = b->array[i + 1];
-		i++;
-	}
-	b->size--;
+    // Если стек b пуст, ничего не делаем
+    if (b->size == 0)
+        return;
+
+    // Сдвигаем элементы стека a вправо для освобождения места в начале
+    i = a->size;
+    while (i > 0)
+    {
+        a->array[i] = a->array[i - 1];
+        i--;
+    }
+
+    // Перемещаем верхний элемент из b в a
+    a->array[0] = b->array[0];
+    a->size++;
+
+    // Сдвигаем элементы стека b влево, удаляя верхний элемент
+    i = 0;
+    while (i < b->size - 1) // Исправлено условие: i < b->size - 1
+    {
+        b->array[i] = b->array[i + 1];
+        i++;
+    }
+    b->size--;
 }
 
-void	pb(t_stack *a, t_stack *b)
-{
-	int	i;
+void pb(t_stack *a, t_stack *b) {
+    int i;
 
-	if (a->size == 0)
-		return ;
-	i = b->size;
-	while (i > 0)
-	{
-		b->array[i] = b->array[i - 1];
-		i--;
-	}
-	b->array[0] = a->array[0];
-	b->size++;
-	i = 0;
-	while (i < a->size)
-	{
-		a->array[i] = a->array[i + 1];
-		i++;
-	}
-	a->size--;
+    // Если стек a пуст, ничего не делаем
+    if (a->size == 0)
+        return;
+
+    // Убедитесь, что стек b имеет достаточный размер
+    // Предполагается, что память для b->array была выделена заранее
+
+    // Сдвигаем элементы стека b вправо для освобождения места в начале
+    i = b->size;
+    while (i > 0) {
+        b->array[i] = b->array[i - 1];
+        i--;
+    }
+
+    // Перемещаем верхний элемент из a в b
+    b->array[0] = a->array[0];
+    b->size++;
+
+    // Сдвигаем элементы стека a влево, удаляя верхний элемент
+    i = 0;
+    while (i < a->size - 1) { // Изменено условие на i < a->size - 1
+        a->array[i] = a->array[i + 1];
+        i++;
+    }
+    a->size--;
 }

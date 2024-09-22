@@ -1,0 +1,519 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sort_big.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/09/05 20:20:11 by skuznets          #+#    #+#             */
+/*   Updated: 2024/09/21 17:55:06 by skuznets         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+#include "push_swap.h"
+
+// Функция для нормализации стека
+void	normalize_stack_radix(t_stack *stack)
+{
+	int	*sorted;
+	int	i;
+	int	j;
+
+	sorted = malloc(stack->size * sizeof(int));
+	if (!sorted)
+		exit(EXIT_FAILURE);
+	for (i = 0; i < stack->size; i++)
+		sorted[i] = stack->array[i];
+	// Сортируем массив
+	for (i = 0; i < stack->size - 1; i++)
+	{
+		for (j = i + 1; j < stack->size; j++)
+		{
+			if (sorted[i] > sorted[j])
+			{
+				int temp = sorted[i];
+				sorted[i] = sorted[j];
+				sorted[j] = temp;
+			}
+		}
+	}
+	// Присваиваем ранги элементам стека
+	for (i = 0; i < stack->size; i++)
+	{
+		for (j = 0; j < stack->size; j++)
+		{
+			if (stack->array[i] == sorted[j])
+			{
+				stack->array[i] = j;
+				break ;
+			}
+		}
+	}
+	free(sorted);
+}
+
+// Функция для определения максимального количества битов
+int	get_max_bits(t_stack *stack)
+{
+	int	max;
+	int	max_bits;
+
+	max = stack->array[0];
+	for (int i = 1; i < stack->size; i++)
+	{
+		if (stack->array[i] > max)
+			max = stack->array[i];
+	}
+	max_bits = 0;
+	while ((max >> max_bits) != 0)
+		max_bits++;
+	return (max_bits);
+}
+
+// Основная функция сортировки radix sort
+int	radix_sort(t_stack *a, t_stack *b)
+{
+	int	op_count;
+	int	max_bits;
+	int	i;
+	int	j;
+	int	num;
+
+	op_count = 0;
+	max_bits = get_max_bits(a);
+	i = 0;
+	while (i < max_bits)
+	{
+		j = 0;
+		while (j < a->size)
+		{
+			num = a->array[0];
+			if (((num >> i) & 1) == 0)
+			{
+				do_pb(a, b);
+				op_count++;
+			}
+			else
+			{
+				do_ra(a);
+				op_count++;
+			}
+			j++;
+		}
+		while (b->size > 0)
+		{
+			do_pa(a, b);
+			op_count++;
+		}
+		i++;
+	}
+	return (op_count);
+}
+
+// Обновленная функция сортировки
+int	sort_stack(t_stack *a, t_stack *b)
+{
+	int	op_count;
+
+	op_count = 0;
+	normalize_stack_radix(a);
+	if (a->size <= 100)
+		op_count = sort_big(a, b); // Ваш текущий алгоритм с LIS
+	else
+		op_count = sort_big(a, b); // Radix sort для больших стеков
+	return (op_count);
+}
+
+
+
+///* ************************************************************************** */
+
+
+
+//#include <limits.h>
+//#include "push_swap.h"
+
+//// Helper function to copy stack to array
+void	copy_stack_to_array(t_stack *stack, int *array)
+{
+	int	i;
+
+	i = 0;
+	while (i < stack->size)
+	{
+		array[i] = stack->array[i];
+		i++;
+	}
+}
+
+// Helper function for insertion sort
+void	insertion_sort(int *array, int size)
+{
+	int	i;
+	int	j;
+	int	temp;
+
+	i = 1;
+	while (i < size)
+	{
+		temp = array[i];
+		j = i - 1;
+		while (j >= 0 && array[j] > temp)
+		{
+			array[j + 1] = array[j];
+			j--;
+		}
+		array[j + 1] = temp;
+		i++;
+	}
+}
+
+// Build rank map for normalization
+void	build_rank_map(t_stack *stack, int *sorted, int *temp_array, int *rank_map)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < stack->size)
+	{
+		j = 0;
+		while (j < stack->size)
+		{
+			if (stack->array[i] == sorted[j])
+			{
+				temp_array[i] = j;
+				rank_map[j] = stack->array[i];
+				break ;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+// Assign ranks to stack elements
+void	assign_ranks_to_stack(t_stack *stack, int *temp_array)
+{
+	int	i;
+
+	i = 0;
+	while (i < stack->size)
+	{
+		stack->array[i] = temp_array[i];
+		i++;
+	}
+}
+
+// Function to normalize the stack
+void	normalize_stack(t_stack *stack, int **rank_map)
+{
+	int	*sorted;
+	int	*temp_array;
+
+	sorted = malloc(stack->size * sizeof(int));
+	temp_array = malloc(stack->size * sizeof(int));
+	*rank_map = malloc(stack->size * sizeof(int));
+	if (!sorted || !temp_array || !(*rank_map))
+		exit(EXIT_FAILURE);
+	copy_stack_to_array(stack, sorted);
+	insertion_sort(sorted, stack->size);
+	build_rank_map(stack, sorted, temp_array, *rank_map);
+	assign_ranks_to_stack(stack, temp_array);
+	free(sorted);
+	free(temp_array);
+}
+
+// Function to find the Longest Increasing Subsequence (LIS)
+int	*find_lis(t_stack *stack, int *lis_length)
+{
+	int	*lengths;
+	int	*previous;
+	int	*lis;
+	int	max_length;
+	int	max_index;
+	int	i;
+	int	j;
+
+	lengths = malloc(stack->size * sizeof(int));
+	previous = malloc(stack->size * sizeof(int));
+	if (!lengths || !previous)
+		exit(EXIT_FAILURE);
+	i = -1;
+	while (++i < stack->size)
+	{
+		lengths[i] = 1;
+		previous[i] = -1;
+	}
+	max_length = 1;
+	max_index = 0;
+	i = 0;
+	while (++i < stack->size)
+	{
+		j = -1;
+		while (++j < i)
+		{
+			if (stack->array[i] > stack->array[j] && lengths[j] + 1 > lengths[i])
+			{
+				lengths[i] = lengths[j] + 1;
+				previous[i] = j;
+			}
+		}
+		if (lengths[i] > max_length)
+		{
+			max_length = lengths[i];
+			max_index = i;
+		}
+	}
+	*lis_length = max_length;
+	lis = malloc(max_length * sizeof(int));
+	if (!lis)
+		exit(EXIT_FAILURE);
+	i = max_index;
+	j = max_length - 1;
+	while (i >= 0)
+	{
+		lis[j--] = stack->array[i];
+		i = previous[i];
+		if (i == -1)
+			break ;
+	}
+	free(lengths);
+	free(previous);
+	return (lis);
+}
+
+// Function to move elements to stack B
+void	move_elements_to_b(t_stack *a, t_stack *b, int *lis, int lis_length, int *op_count)
+{
+	int	*is_in_lis;
+	int	i;
+
+	is_in_lis = malloc(a->size * sizeof(int));
+	if (!is_in_lis)
+		exit(EXIT_FAILURE);
+	i = 0;
+	while (i < a->size)
+		is_in_lis[i++] = 0;
+	i = 0;
+	while (i < lis_length)
+	{
+		is_in_lis[lis[i]] = 1;
+		i++;
+	}
+	while (a->size > lis_length)
+	{
+		if (is_in_lis[a->array[0]])
+		{
+			do_ra(a);
+			(*op_count)++;
+		}
+		else
+		{
+			do_pb(a, b);
+			(*op_count)++;
+		}
+	}
+	free(is_in_lis);
+}
+
+// Function to find the index of the minimum element
+int	find_min_index_big(t_stack *stack)
+{
+	int	min;
+	int	index;
+	int	i;
+
+	min = stack->array[0];
+	index = 0;
+	i = 1;
+	while (i < stack->size)
+	{
+		if (stack->array[i] < min)
+		{
+			min = stack->array[i];
+			index = i;
+		}
+		i++;
+	}
+	return (index);
+}
+
+// Function to get target position in stack A
+int	get_target_position(t_stack *a, int value)
+{
+	int	i;
+	int	pos;
+	int	curr;
+	int	next;
+
+	if (a->size == 0)
+		return (0);
+	i = 0;
+	pos = -1;
+	while (i < a->size)
+	{
+		curr = a->array[i];
+		next = a->array[(i + 1) % a->size];
+		if ((curr < value && value < next) ||
+			(curr > next && (value > curr || value < next)))
+		{
+			pos = i + 1;
+			break ;
+		}
+		i++;
+	}
+	if (pos == -1)
+	{
+		pos = find_min_index_big(a);
+	}
+	return (pos % a->size);
+}
+
+// Function to calculate moves required
+void	calculate_moves(t_stack *a, t_stack *b, int *moves_a, int *moves_b, int *total_moves)
+{
+	int	i;
+	int	pos_a;
+	int	move_a;
+	int	move_b;
+
+	i = 0;
+	while (i < b->size)
+	{
+		pos_a = get_target_position(a, b->array[i]);
+		move_a = pos_a <= a->size / 2 ? pos_a : pos_a - a->size;
+		move_b = i <= b->size / 2 ? i : i - b->size;
+		moves_a[i] = move_a;
+		moves_b[i] = move_b;
+		total_moves[i] = abs(move_a) + abs(move_b);
+		i++;
+	}
+}
+
+// Function to execute the calculated moves
+void	execute_moves(t_stack *a, t_stack *b, int move_a, int move_b, int *op_count)
+{
+	while (move_a > 0 && move_b > 0)
+	{
+		do_rr(a, b);
+		move_a--;
+		move_b--;
+		(*op_count)++;
+	}
+	while (move_a < 0 && move_b < 0)
+	{
+		do_rrr(a, b);
+		move_a++;
+		move_b++;
+		(*op_count)++;
+	}
+	while (move_a > 0)
+	{
+		do_ra(a);
+		move_a--;
+		(*op_count)++;
+	}
+	while (move_a < 0)
+	{
+		do_rra(a);
+		move_a++;
+		(*op_count)++;
+	}
+	while (move_b > 0)
+	{
+		do_rb(b);
+		move_b--;
+		(*op_count)++;
+	}
+	while (move_b < 0)
+	{
+		do_rrb(b);
+		move_b++;
+		(*op_count)++;
+	}
+	do_pa(a, b);
+	(*op_count)++;
+}
+
+// Function to move elements back to stack A
+void	move_back_to_a(t_stack *a, t_stack *b, int *op_count)
+{
+	int	*moves_a;
+	int	*moves_b;
+	int	*total_moves;
+	int	i;
+	int	min_moves;
+	int	min_index;
+
+	while (b->size > 0)
+	{
+		moves_a = malloc(b->size * sizeof(int));
+		moves_b = malloc(b->size * sizeof(int));
+		total_moves = malloc(b->size * sizeof(int));
+		if (!moves_a || !moves_b || !total_moves)
+			exit(EXIT_FAILURE);
+		calculate_moves(a, b, moves_a, moves_b, total_moves);
+		min_moves = total_moves[0];
+		min_index = 0;
+		i = 1;
+		while (i < b->size)
+		{
+			if (total_moves[i] < min_moves)
+			{
+				min_moves = total_moves[i];
+				min_index = i;
+			}
+			i++;
+		}
+		execute_moves(a, b, moves_a[min_index], moves_b[min_index], op_count);
+		free(moves_a);
+		free(moves_b);
+		free(total_moves);
+	}
+	min_index = find_min_index_big(a);
+	if (min_index <= a->size / 2)
+	{
+		while (min_index-- > 0)
+		{
+			do_ra(a);
+			(*op_count)++;
+		}
+	}
+	else
+	{
+		min_index = a->size - min_index;
+		while (min_index-- > 0)
+		{
+			do_rra(a);
+			(*op_count)++;
+		}
+	}
+}
+
+// Main sorting function
+int	sort_big(t_stack *a, t_stack *b)
+{
+	int	op_count;
+	int	lis_length;
+	int	*lis_indices;
+	int	*rank_map;
+	int	i;
+
+	op_count = 0;
+	normalize_stack(a, &rank_map);
+	lis_indices = find_lis(a, &lis_length);
+	move_elements_to_b(a, b, lis_indices, lis_length, &op_count);
+	move_back_to_a(a, b, &op_count);
+	free(lis_indices);
+	i = 0;
+	while (i < a->size)
+	{
+		a->array[i] = rank_map[a->array[i]];
+		i++;
+	}
+	free(rank_map);
+	return (op_count);
+}
+

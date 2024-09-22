@@ -6,7 +6,7 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/16 17:43:30 by skuznets          #+#    #+#             */
-/*   Updated: 2024/06/16 17:52:15 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/05 22:49:44 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,20 @@ void free_stack(t_stack *stack) {
         if (stack->array)
             free(stack->array);
         free(stack);
+    }
+}
+
+void load_stack(t_stack *stack, int argc, char **argv)
+{
+    int i = 1;
+    long value;
+
+    while (i < argc) {
+        // Используем ft_atoi для конвертации строки в число
+        if (ft_atoi(argv[i], &value) == 0) {
+            stack->array[stack->size] = (int)value;
+            stack->size++;
+        }
+        i++;
     }
 }
