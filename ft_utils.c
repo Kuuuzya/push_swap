@@ -6,7 +6,7 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 23:14:55 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/05 22:48:08 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/22 11:27:26 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,34 +30,30 @@ static int	ft_isspace(int c)
 	return (c == ' ' || (c >= '\t' && c <= '\r'));
 }
 
-long ft_atoi(const char *str, long *out)
+long	ft_atoi(const char *str, long *out)
 {
-    long res = 0;
-    int sign = 1;
+	long	res;
+	int		sign;
 
-    while (ft_isspace(*str))
-        str++;
-    if (*str == '-' || *str == '+')
-    {
-        if (*str == '-')
-            sign = -1;
-        str++;
-    }
-    if (!ft_isdigit(*str)) // Проверка на пустую строку после знака
-        return 1;
-
-    while (ft_isdigit(*str))
-    {
-        res = res * 10 + (*str - '0');
-        // Проверка на переполнение диапазона `int`
-        if ((sign == 1 && res > 2147483647) || (sign == -1 && res > 2147483648))
-            return 1;
-        str++;
-    }
-
-    if (*str != '\0') // Проверка на наличие нецифровых символов
-        return 1;
-
-    *out = res * sign;
-    return 0;
+	res = 0;
+	sign = 1;
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '-' || *str == '+')
+	{
+		if (*str == '-')
+			sign = -1;
+		str++;
+	}
+	if (!ft_isdigit(*str))
+		return (1);
+	while (ft_isdigit(*str))
+	{
+		res = res * 10 + (*str - '0');
+		if ((sign == 1 && res > 2147483647) || (sign == -1 && res > 2147483648))
+			return (1);
+		str++;
+	}
+	*out = res * sign;
+	return (*str != '\0');
 }

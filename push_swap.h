@@ -6,7 +6,7 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 11:02:51 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/22 11:04:54 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/22 13:20:17 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,6 @@ typedef struct s_stack
 	int	*array;
 	int	size;
 }	t_stack;
-
-typedef struct s_value_index
-{
-	int	value;
-	int	index;
-}	t_value_index;
 
 t_stack	*init_stack(int size);
 void	free_stack(t_stack *stack);
@@ -57,7 +51,6 @@ void	do_rra(t_stack *a);
 void	do_rrb(t_stack *b);
 void	do_rrr(t_stack *a, t_stack *b);
 //Sort
-int		no_sort(void);
 int		is_sorted(t_stack *a);
 int		find_max_index(t_stack *a);
 int		find_min_index(t_stack *a);
@@ -65,6 +58,14 @@ int		sort(t_stack *a, t_stack *b);
 int		sort_3(t_stack *a);
 int		is_sorted(t_stack *a);
 int		sort_big(t_stack *a, t_stack *b);
+void	swap(int *a, int *b);
+void	quicksort(int *arr, int low, int high);
+int		*create_sorted_array(t_stack *s);
+void	restore_original_values(t_stack *a, int *sorted_arr, int total_size);
+void	assign_indices(t_stack *a, int *sorted_arr);
+int		find_max_position(t_stack *b);
+void	rotate_b_to_top(t_stack *b, int max_pos);
+
 // Verification
 int		has_duplicates(int argc, char **argv);
 int		is_integer(const char *str);

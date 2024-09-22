@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 19:53:41 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/05 22:50:10 by skuznets         ###   ########.fr       */
+/*   Created: 2024/09/22 12:07:53 by skuznets          #+#    #+#             */
+/*   Updated: 2024/09/22 12:09:08 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,31 +27,28 @@ int	is_integer(const char *str)
 	return (1);
 }
 
-int has_duplicates(int argc, char **argv)
+int	has_duplicates(int argc, char **argv)
 {
-    int i, j;
-    long num_i, num_j;
+	int		i;
+	int		j;
+	long	num_i;
+	long	num_j;
 
-    i = 1;
-    while (i < argc)
-    {
-        // Конвертация строки в число через ft_atoi
-        if (ft_atoi(argv[i], &num_i) != 0)
-            return 1; // Если вдруг ошибка, возвращаем 1 (это можно оставить для безопасности)
-
-        j = i + 1;
-        while (j < argc)
-        {
-            // Конвертация строки в число через ft_atoi
-            if (ft_atoi(argv[j], &num_j) != 0)
-                return 1; // Аналогично проверяем второе число
-
-            if (num_i == num_j)
-                return 1; // Найден дубликат
-
-            j++;
-        }
-        i++;
-    }
-    return 0;
+	i = 1;
+	while (i < argc)
+	{
+		if (ft_atoi(argv[i], &num_i) != 0)
+			return (1);
+		j = i + 1;
+		while (j < argc)
+		{
+			if (ft_atoi(argv[j], &num_j) != 0)
+				return (1);
+			if (num_i == num_j)
+				return (1);
+			j++;
+		}
+		i++;
+	}
+	return (0);
 }

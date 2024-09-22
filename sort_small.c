@@ -22,102 +22,68 @@ int	sort_2(t_stack *a)
 	return (0);
 }
 
-// Сортировка для трёх элементов
 int	sort_3(t_stack *a)
 {
-	int	op_count;
-
-	op_count = 0;
 	if (a->array[0] > a->array[1])
-	{
 		do_sa(a);
-		op_count++;
-	}
 	if (a->array[1] > a->array[2])
-	{
 		do_rra(a);
-		op_count++;
-	}
 	if (a->array[0] > a->array[1])
-	{
 		do_sa(a);
-		op_count++;
-	}
-	return (op_count);
+	return (0);
 }
 
 int	sort_4(t_stack *a, t_stack *b)
 {
-	int	op_count;
 	int	min_index;
 
-	op_count = 0;
 	min_index = find_min_index(a);
 	if (min_index == 1)
-	{
 		do_ra(a);
-		op_count++;
-	}
 	else if (min_index == 2)
 	{
 		do_ra(a);
 		do_ra(a);
-		op_count += 2;
 	}
 	else if (min_index == 3)
-	{
 		do_rra(a);
-		op_count++;
-	}
 	do_pb(a, b);
-	op_count += sort_3(a)+1;
+	sort_3(a);
 	do_pa(a, b);
-	return (++op_count);
+	return (0);
 }
 
 int	sort_5(t_stack *a, t_stack *b)
 {
-	int	op_count;
 	int	min_index;
 
-	op_count = 0;
 	min_index = find_min_index(a);
 	if (min_index == 1)
-	{
 		do_ra(a);
-		op_count++;
-	}
 	else if (min_index == 2)
 	{
 		do_ra(a);
 		do_ra(a);
-		op_count += 2;
 	}
 	else if (min_index == 3)
 	{
 		do_rra(a);
 		do_rra(a);
-		op_count += 2;
 	}
 	else if (min_index == 4)
-	{
 		do_rra(a);
-		op_count++;
-	}
 	do_pb(a, b);
-	op_count++;
-	op_count += sort_4(a, b);
+	sort_4(a, b);
 	do_pa(a, b);
-	op_count++;
-	return (op_count);
+	return (0);
 }
 
-int sort(t_stack *a, t_stack *b)
+int	sort(t_stack *a, t_stack *b)
 {
 	if (is_sorted(a))
-		return (no_sort());
+		return (0);
 	if (a->size == 0 || a->size == 1)
-		return (no_sort());
+		return (0);
 	else if (a->size == 2)
 		return (sort_2(a));
 	else if (a->size == 3)

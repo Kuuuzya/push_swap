@@ -6,13 +6,11 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 00:13:36 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/22 11:16:14 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/22 13:19:22 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "push_swap.h"
-#include <stdio.h>
 
 int	check(int argc, char *argv[])
 {
@@ -55,17 +53,8 @@ int	main(int argc, char *argv[])
 	}
 	load_stack(a, argc, argv);
 	sort(a, b);
-	printf("\n\n RESULT \n");
-	int j = 0;
-	while (j < a->size)
-	{
-	printf("%d ", a->array[j]);
-	j++;
-	}
 	free_stack(a);
 	free_stack(b);
-	printf("\n");
-	system("leaks push_swap");
 	return (0);
 }
 

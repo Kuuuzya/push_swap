@@ -5,151 +5,68 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/22 00:38:13 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/22 11:01:12 by skuznets         ###   ########.fr       */
+/*   Created: 2024/09/22 12:17:01 by skuznets          #+#    #+#             */
+/*   Updated: 2024/09/22 13:33:03 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-#include <stdlib.h>
 
-// Function to swap two numbers
-void swap(int *a, int *b) {
-	int temp = *a;
-	*a = *b;
-	*b = temp;
-}
-
-// Quick sort using while loops
-void quicksort(int *arr, int low, int high) {
-	if (low < high) {
-		int pivot = arr[high];
-		int i = low - 1;
-		int j = low;
-
-		while (j < high) {
-			if (arr[j] < pivot) {
-				i++;
-				swap(&arr[i], &arr[j]);
-			}
-			j++;
-		}
-		i++;
-		swap(&arr[i], &arr[high]);
-
-		quicksort(arr, low, i - 1);
-		quicksort(arr, i + 1, high);
-	}
-}
-
-// Create a sorted array
-int *create_sorted_array(t_stack *s) {
-	int *arr = malloc(s->size * sizeof(int));
-	int i = 0;
-
-	while (i < s->size) {
-		arr[i] = s->array[i];
-		i++;
-	}
-
-	quicksort(arr, 0, s->size - 1);
-
-	return arr;
-}
-
-// Assign indices to stack elements based on sorted array
-void assign_indices(t_stack *a, int *sorted_arr) {
-	int i = 0;
-	while (i < a->size) {
-		int j = 0;
-		while (j < a->size) {
-			if (a->array[i] == sorted_arr[j]) {
-				a->array[i] = j;
-				break;
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
-// Optimized sort_big function
-int sort_big(t_stack *a, t_stack *b) {
-	int *sorted_arr = create_sorted_array(a);
-	int total_size = a->size;
-	int op_count = 0;
-
-	assign_indices(a, sorted_arr);
-
-	int chunk_size;
-	if (total_size <= 100)
-		chunk_size = 15;  // Adjusted for optimal performance
+void	initialize_sort(t_stack *a, int **sorted_arr, int *chunk_size)
+{
+	*sorted_arr = create_sorted_array(a);
+	assign_indices(a, *sorted_arr);
+	if (a->size <= 100)
+		*chunk_size = 15;
 	else
-		chunk_size = 30;
+		*chunk_size = 30;
+}
 
-	int current = 0;
+void	move_chunks_to_b(t_stack *a, t_stack *b, int chunk_size)
+{
+	int	current;
 
-	while (a->size > 0) {
-		if (a->array[0] <= current) {
+	current = 0;
+	while (a->size > 0)
+	{
+		if (a->array[0] <= current)
+		{
 			do_pb(a, b);
-			op_count++;
-
-			// Optional optimization: rotate b if necessary
-			if (b->size > 1 && b->array[0] < b->array[1]) {
+			if (b->size > 1 && b->array[0] < b->array[1])
 				do_rb(b);
-				op_count++;
-			}
 			current++;
 		}
-		else if (a->array[0] <= current + chunk_size) {
+		else if (a->array[0] <= current + chunk_size)
+		{
 			do_pb(a, b);
-			op_count++;
 			current++;
 		}
-		else {
+		else
 			do_ra(a);
-			op_count++;
-		}
 	}
+}
 
-	// Push back from B to A
-	while (b->size > 0) {
-		int max_pos = 0;
-		int max_value = b->array[0];
-		int i = 1;
-		while (i < b->size) {
-			if (b->array[i] > max_value) {
-				max_value = b->array[i];
-				max_pos = i;
-			}
-			i++;
-		}
+void	move_max_back_to_a(t_stack *a, t_stack *b)
+{
+	int	max_pos;
 
-		if (max_pos <= b->size / 2) {
-			while (max_pos > 0) {
-				do_rb(b);
-				op_count++;
-				max_pos--;
-			}
-		} else {
-			while (max_pos < b->size) {
-				do_rrb(b);
-				op_count++;
-				max_pos++;
-			}
-		}
+	while (b->size > 0)
+	{
+		max_pos = find_max_position(b);
+		rotate_b_to_top(b, max_pos);
 		do_pa(a, b);
-		op_count++;
 	}
+}
 
-	// Restore original values in stack A
-	int i = 0;
-	while (i < total_size) {
-		a->array[i] = sorted_arr[a->array[i]];
-		i++;
-	}
+int	sort_big(t_stack *a, t_stack *b)
+{
+	int	*sorted_arr;
+	int	chunk_size;
 
+	initialize_sort(a, &sorted_arr, &chunk_size);
+	move_chunks_to_b(a, b, chunk_size);
+	move_max_back_to_a(a, b);
+	restore_original_values(a, sorted_arr, a->size);
 	free(sorted_arr);
-	system("leaks push_swap");
-	return op_count;
+	return (0);
 }

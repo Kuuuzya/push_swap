@@ -6,7 +6,7 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 22:54:49 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/21 15:49:33 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/22 12:39:30 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,6 @@ int	is_sorted(t_stack *a)
 		i++;
 	}
 	return (1);
-}
-
-int	no_sort(void)
-{
-	//ft_putstr("Already sorted or no elements to sort\n");
-	return (0);
 }
 
 int	find_max_index(t_stack *a)
@@ -62,4 +56,40 @@ int	find_min_index(t_stack *a)
 		i++;
 	}
 	return (min_index);
+}
+
+void	swap(int *a, int *b)
+{
+	int	temp;
+
+	temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+void	quicksort(int *arr, int low, int high)
+{
+	int	pivot;
+	int	i;
+	int	j;
+
+	if (low < high)
+	{
+		pivot = arr[high];
+		i = low - 1;
+		j = low;
+		while (j < high)
+		{
+			if (arr[j] < pivot)
+			{
+				i++;
+				swap(&arr[i], &arr[j]);
+			}
+			j++;
+		}
+		i++;
+		swap(&arr[i], &arr[high]);
+		quicksort(arr, low, i - 1);
+		quicksort(arr, i + 1, high);
+	}
 }
