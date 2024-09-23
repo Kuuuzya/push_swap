@@ -6,7 +6,7 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 12:17:01 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/22 13:33:03 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/23 15:53:26 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,5 @@ int	sort_big(t_stack *a, t_stack *b)
 	move_max_back_to_a(a, b);
 	restore_original_values(a, sorted_arr, a->size);
 	free(sorted_arr);
-	return (0);
+	return (1);
 }

@@ -30,7 +30,7 @@ int	sort_3(t_stack *a)
 		do_rra(a);
 	if (a->array[0] > a->array[1])
 		do_sa(a);
-	return (0);
+	return (1);
 }
 
 int	sort_4(t_stack *a, t_stack *b)
@@ -50,7 +50,7 @@ int	sort_4(t_stack *a, t_stack *b)
 	do_pb(a, b);
 	sort_3(a);
 	do_pa(a, b);
-	return (0);
+	return (1);
 }
 
 int	sort_5(t_stack *a, t_stack *b)
@@ -75,7 +75,7 @@ int	sort_5(t_stack *a, t_stack *b)
 	do_pb(a, b);
 	sort_4(a, b);
 	do_pa(a, b);
-	return (0);
+	return (1);
 }
 
 int	sort(t_stack *a, t_stack *b)

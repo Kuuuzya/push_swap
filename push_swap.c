@@ -6,11 +6,12 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 00:13:36 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/22 13:19:22 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/23 15:52:42 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+#include <stdio.h>
 
 int	check(int argc, char *argv[])
 {
@@ -53,6 +54,15 @@ int	main(int argc, char *argv[])
 	}
 	load_stack(a, argc, argv);
 	sort(a, b);
+		//Output
+	printf("\n\n RESULT \n");
+	int j = 0;
+	while (j < a->size)
+	{
+	printf("%d ", a->array[j]);
+	j++;
+	}
+	printf("\n");
 	free_stack(a);
 	free_stack(b);
 	return (0);

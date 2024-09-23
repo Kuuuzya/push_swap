@@ -6,7 +6,7 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 11:02:51 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/22 13:20:17 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/23 15:52:12 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	rr(t_stack *a, t_stack *b);
 void	rra(t_stack *a);
 void	rrb(t_stack *b);
 void	rrr(t_stack *a, t_stack *b);
+
 // print
 void	do_sa(t_stack *a);
 void	do_sb(t_stack *b);
@@ -50,6 +51,7 @@ void	do_rr(t_stack *a, t_stack *b);
 void	do_rra(t_stack *a);
 void	do_rrb(t_stack *b);
 void	do_rrr(t_stack *a, t_stack *b);
+
 //Sort
 int		is_sorted(t_stack *a);
 int		find_max_index(t_stack *a);
@@ -72,5 +74,4 @@ int		is_integer(const char *str);
 long	ft_atoi(const char *str, long *value);
 void	ft_putstr(char const *s);
 int		ft_isdigit(int c);
-
 #endif
