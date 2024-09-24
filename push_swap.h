@@ -6,7 +6,7 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 11:02:51 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/23 15:52:12 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:19:48 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,9 @@ int		is_integer(const char *str);
 long	ft_atoi(const char *str, long *value);
 void	ft_putstr(char const *s);
 int		ft_isdigit(int c);
+int		is_whitespace_only(char *str);
+char	**ft_split(char const *s, char c);
+int		check(int argc, char *argv[]);
+void	free_args(char **args, int count);
+void	free_all(t_stack *a, t_stack *b, char **args, int count);
 #endif

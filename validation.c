@@ -6,7 +6,7 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/22 12:07:53 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/22 12:09:08 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:19:31 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,49 @@ int	has_duplicates(int argc, char **argv)
 		i++;
 	}
 	return (0);
+}
+
+int	check(int argc, char *argv[])
+{
+	int		i;
+	long	value;
+
+	i = 1;
+	if (argc == 1)
+		return (0);
+	while (i < argc)
+	{
+		if (ft_atoi(argv[i], &value) != 0)
+		{
+			write(2, "Error\n", 6);
+			return (1);
+		}
+		i++;
+	}
+	if (has_duplicates(argc, argv))
+	{
+		write(2, "Error\n", 6);
+		return (1);
+	}
+	return (0);
+}
+
+void	free_args(char **args, int count)
+{
+	int	i;
+
+	i = 1;
+	while (i < count)
+	{
+		free(args[i]);
+		i++;
+	}
+	free(args);
+}
+
+void	free_all(t_stack *a, t_stack *b, char **args, int count)
+{
+	free_stack(a);
+	free_stack(b);
+	free_args(args, count);
 }

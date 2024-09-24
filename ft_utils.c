@@ -6,7 +6,7 @@
 /*   By: skuznets <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/29 23:14:55 by skuznets          #+#    #+#             */
-/*   Updated: 2024/09/22 11:27:26 by skuznets         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:48:46 by skuznets         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,17 @@ long	ft_atoi(const char *str, long *out)
 	}
 	*out = res * sign;
 	return (*str != '\0');
+}
+
+int	is_whitespace_only(char *str)
+{
+	if (!str)
+		return (1);
+	while (*str)
+	{
+		if (!ft_isspace((unsigned char)*str))
+			return (0);
+		str++;
+	}
+	return (1);
 }
